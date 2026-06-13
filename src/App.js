@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const BFF = "http://localhost:8081/api";
+const BFF = "http://localhost:8083/api/bff";
 
 function App() {
   const [proyectos, setProyectos] = useState([]);
@@ -23,29 +23,27 @@ function App() {
   }, []);
 
   const cargarProyectos = () =>
-    axios.get(`http://localhost:8081/api/proyectos`).then(r => setProyectos(r.data)).catch(() => {});
+    axios.get(`${BFF}/proyectos`).then(r => setProyectos(r.data)).catch(() => {});
 
   const cargarRecursos = () =>
-    axios.get(`http://localhost:8082/api/recursos`).then(r => setRecursos(r.data)).catch(() => {});
+     axios.get(`${BFF}/recursos`).then(r => setRecursos(r.data)).catch(() => {});
 
-  const crearProyecto = () => {
-    axios.post(`http://localhost:8081/api/proyectos`, proyecto).then(() => {
+  const crearProyecto = () => 
+    axios.post(`${BFF}/proyectos`, proyecto).then(() => {
       cargarProyectos();
       setProyecto({ nombre: "", descripcion: "", estado: "ACTIVO", tareasCompletadas: 0, tareasTotales: 0 });
     });
-  };
 
   const eliminarProyecto = (id) => {
-    axios.delete(`http://localhost:8081/api/proyectos/${id}`).then(cargarProyectos);
-  };
+     axios.delete(`${BFF}/proyectos/${id}`).then(cargarProyectos);
+};
 
   const crearRecurso = () => {
-    axios.post(`http://localhost:8082/api/recursos`, recurso).then(() => {
+    axios.post(`${BFF}/recursos`, recurso).then(() => {
       cargarRecursos();
       setRecurso({ nombre: "", rol: "DEV", equipo: "", disponible: true });
     });
-  };
-
+};
   return (
     <div style={styles.app}>
       <header style={styles.header}>
