@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const BFF = "http://localhost:8083/api/bff";
+const BFF = "http://localhost:8081/api/bff";
 
 function App() {
   const [proyectos, setProyectos] = useState([]);
