@@ -105,7 +105,7 @@ const Perfil = () => {
                     {errores.nombre && <span className="error-text">⚠️ {errores.nombre}</span>}
                 </div>
 
-                {/* Campo: Correo */}
+                {/* Campo:  Correo */}
                 <div className="form-group">
                     <label>Correo Electrónico:</label>
                     <input 
