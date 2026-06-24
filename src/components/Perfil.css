@@ -1,0 +1,91 @@
+.perfil-container {
+    max-width: 450px;
+    margin: 20px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-top: 6px solid #1a237e; /* Línea azul gruesa arriba */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.perfil-container h2 {
+    color: #1a237e;
+    margin-bottom: 5px;
+    font-size: 24px;
+}
+
+.perfil-subtitulo {
+    color: #0288d1; /* Celeste vibrante */
+    font-size: 14px;
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #333333;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.perfil-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #b3e5fc; /* Borde celeste claro */
+    border-radius: 6px;
+    font-size: 15px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.perfil-input:focus {
+    outline: none;
+    border-color: #0288d1; /* Cambia a celeste oscuro */
+    box-shadow: 0 0 8px rgba(2, 136, 209, 0.2);
+}
+
+.error-text {
+    color: #d32f2f;
+    font-size: 13px;
+    margin-top: 5px;
+    display: block;
+}
+
+.exito-banner {
+    background: #e1f5fe; /* Fondo celeste muy claro */
+    color: #0288d1;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 1px solid #b3e5fc;
+}
+
+.btn-guardar {
+    width: 100%;
+    background: #1a237e; /* Azul principal */
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.btn-guardar:hover {
+    background: #0288d1; /* Cambia a celeste al pasar el mouse */
+}
+
+.btn-guardar:active {
+    transform: scale(0.98); /* Efecto de hundimiento al hacer clic */
+}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Perfil from "./components/Perfil";
 import axios from "axios";
 
 const BFF = "http://localhost:8081/api/bff";
@@ -6,7 +7,7 @@ const BFF = "http://localhost:8081/api/bff";
 function App() {
   const [proyectos, setProyectos] = useState([]);
   const [recursos, setRecursos] = useState([]);
-  const [vista, setVista] = useState("proyectos");
+  const [vista, setVista] = useState("proyectos"); // Controla qué pantalla se muestra
 
   const [proyecto, setProyecto] = useState({
     nombre: "", descripcion: "", estado: "ACTIVO",
@@ -26,7 +27,7 @@ function App() {
     axios.get(`${BFF}/proyectos`).then(r => setProyectos(r.data)).catch(() => {});
 
   const cargarRecursos = () =>
-     axios.get(`${BFF}/recursos`).then(r => setRecursos(r.data)).catch(() => {});
+       axios.get(`${BFF}/recursos`).then(r => setRecursos(r.data)).catch(() => {});
 
   const crearProyecto = () => 
     axios.post(`${BFF}/proyectos`, proyecto).then(() => {
@@ -35,7 +36,7 @@ function App() {
     });
 
   const eliminarProyecto = (id) => {
-     axios.delete(`${BFF}/proyectos/${id}`).then(cargarProyectos);
+       axios.delete(`${BFF}/proyectos/${id}`).then(cargarProyectos);
 };
 
   const crearRecurso = () => {
@@ -51,6 +52,7 @@ function App() {
         <p>Plataforma de Gestión de Proyectos y Recursos</p>
       </header>
 
+      {/* MENÚ DE NAVEGACIÓN MODIFICADO */}
       <nav style={styles.nav}>
         <button style={vista === "proyectos" ? styles.btnActivo : styles.btn}
           onClick={() => setVista("proyectos")}>
@@ -60,10 +62,16 @@ function App() {
           onClick={() => setVista("recursos")}>
           👥 Recursos
         </button>
+        {/* NUEVO: Botón para acceder a la vista del Perfil */}
+        <button style={vista === "perfil" ? styles.btnActivo : styles.btn}
+          onClick={() => setVista("perfil")}>
+          👤 Mi Perfil
+        </button>
       </nav>
 
       <main style={styles.main}>
 
+        {/* VISTA 1: PROYECTOS */}
         {vista === "proyectos" && (
           <div>
             <h2>Gestión de Proyectos</h2>
@@ -111,6 +119,7 @@ function App() {
           </div>
         )}
 
+        {/* VISTA 2: RECURSOS */}
         {vista === "recursos" && (
           <div>
             <h2>Gestión de Recursos y Colaboración</h2>
@@ -147,6 +156,14 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* NUEVO - VISTA 3: PERFIL DE USUARIO */}
+        {vista === "perfil" && (
+          <div>
+            <Perfil />
+          </div>
+        )}
+
       </main>
     </div>
   );
