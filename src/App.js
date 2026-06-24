@@ -8,8 +8,6 @@ function App() {
   const [proyectos, setProyectos] = useState([]);
   const [recursos, setRecursos] = useState([]);
   const [vista, setVista] = useState("proyectos");
-  
-  // NUEVO: Estado para abrir/cerrar el menú desplegable de la cuenta
   const [menuAbierto, setMenuAbierto] = useState(false);
 
   const [proyecto, setProyecto] = useState({
@@ -191,7 +189,7 @@ function App() {
   );
 }
 
-// ESTILOS ACTUALIZADOS PARA EL MENU DESPLEGABLE EN EL HEADER
+
 const styles = {
   app: { fontFamily: "Arial, sans-serif", maxWidth: 900, margin: "0 auto", padding: 20 },
   header: { 
@@ -203,7 +201,7 @@ const styles = {
     display: "flex", 
     justifyContent: "between", 
     alignItems: "center",
-    position: "relative" // Necesario para posicionar el menú flotante
+    position: "relative" 
   },
   headerText: { flexGrow: 1, textAlign: "left" },
   usuarioContenedor: { position: "relative" },
