@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import './Perfil.css'; 
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'; 
+import './Perfil.css';
+
+const BFF_PERFIL_URL = "http://localhost:8081/api/bff/perfil";
 
 const Perfil = () => {
     const [perfil, setPerfil] = useState({
@@ -10,6 +13,26 @@ const Perfil = () => {
 
     const [errores, setErrores] = useState({});
     const [mensajeExito, setMensajeExito] = useState('');
+    const [mensajeError, setMensajeError] = useState('');
+
+    
+    useEffect(() => {
+        axios.get(BFF_PERFIL_URL)
+            .then(respuesta => {
+                // Si el BFF nos devuelve datos (aunque vengan vacíos del fallback), los cargamos en el estado
+                if (respuesta.data) {
+                    setPerfil({
+                        nombre: respuesta.data.nombre || '',
+                        correo: respuesta.data.correo || '',
+                        rol: respuesta.data.rol || ''
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Error al cargar el perfil desde el BFF:", error);
+                setMensajeError("No se pudieron cargar los datos del perfil.");
+            });
+    }, []);
 
     const validarFormulario = () => {
         let erroresDetectados = {};
@@ -32,8 +55,8 @@ const Perfil = () => {
             esValido = false;
         }
 
-        if (!perfil.rol.trim()) {
-            erroresDetectados.rol = "El rol o cargo es obligatorio.";
+        if (!perfil.rol) {
+            erroresDetectados.rol = "Debe seleccionar un rol o cargo.";
             esValido = false;
         }
 
@@ -41,22 +64,32 @@ const Perfil = () => {
         return esValido;
     };
 
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         setMensajeExito('');
+        setMensajeError('');
 
         if (validarFormulario()) {
-            setMensajeExito("✨ ¡Esqueleto validado con éxito! Listo para conectar al BFF.");
-            console.log("Datos listos:", perfil);
+            
+            axios.put(BFF_PERFIL_URL, perfil)
+                .then(respuesta => {
+                    setMensajeExito("✨ ¡Perfil guardado y persistido con éxito en el Backend!");
+                })
+                .catch(error => {
+                    console.error("Error al guardar el perfil:", error);
+                    setMensajeError("❌ Error de comunicación: El BFF o el microservicio están caídos.");
+                });
         }
     };
 
     return (
         <div className="perfil-container">
             <h2>Mi Perfil de Usuario</h2>
-            <div className="perfil-subtitulo">Configuración de cuenta y accesos</div>
+            <div className="perfil-subtitulo">Configuración de cuenta de extremo a extremo</div>
             
             {mensajeExito && <div className="exito-banner">{mensajeExito}</div>}
+            {mensajeError && <div className="error-text" style={{ textAlign: 'center', marginBottom: '15px', fontWeight: 'bold' }}>{mensajeError}</div>}
 
             <form onSubmit={handleSubmit}>
                 {/* Campo: Nombre */}
@@ -85,7 +118,7 @@ const Perfil = () => {
                     {errores.correo && <span className="error-text">⚠️ {errores.correo}</span>}
                 </div>
 
-                {/* Campo: Rol (Cambiado a Selector) */}
+                {/* Campo: Rol */}
                 <div className="form-group">
                     <label>Rol / Cargo:</label>
                     <select 
@@ -93,7 +126,7 @@ const Perfil = () => {
                         value={perfil.rol} 
                         onChange={(e) => setPerfil({...perfil, rol: e.target.value})}
                     >
-                        <option value=""> Selecciona un Rol </option>
+                        <option value="">-- Selecciona un Rol --</option>
                         <option value="DEV">Desarrollador</option>
                         <option value="QA">QA Tester</option>
                         <option value="PM">Project Manager</option>
@@ -101,6 +134,7 @@ const Perfil = () => {
                     </select>
                     {errores.rol && <span className="error-text">⚠️ {errores.rol}</span>}
                 </div>
+
                 <button type="submit" className="btn-guardar">
                     Guardar Cambios
                 </button>
@@ -108,4 +142,5 @@ const Perfil = () => {
         </div>
     );
 };
+
 export default Perfil;

@@ -7,7 +7,10 @@ const BFF = "http://localhost:8081/api/bff";
 function App() {
   const [proyectos, setProyectos] = useState([]);
   const [recursos, setRecursos] = useState([]);
-  const [vista, setVista] = useState("proyectos"); // Controla qué pantalla se muestra
+  const [vista, setVista] = useState("proyectos");
+  
+  // NUEVO: Estado para abrir/cerrar el menú desplegable de la cuenta
+  const [menuAbierto, setMenuAbierto] = useState(false);
 
   const [proyecto, setProyecto] = useState({
     nombre: "", descripcion: "", estado: "ACTIVO",
@@ -37,22 +40,46 @@ function App() {
 
   const eliminarProyecto = (id) => {
        axios.delete(`${BFF}/proyectos/${id}`).then(cargarProyectos);
-};
+  };
 
   const crearRecurso = () => {
     axios.post(`${BFF}/recursos`, recurso).then(() => {
       cargarRecursos();
       setRecurso({ nombre: "", rol: "DEV", equipo: "", disponible: true });
     });
-};
+  };
+
   return (
     <div style={styles.app}>
+      
+      {/* HEADER MODIFICADO CON MENÚ DE CUENTA */}
       <header style={styles.header}>
-        <h1>InnovaTech Solutions</h1>
-        <p>Plataforma de Gestión de Proyectos y Recursos</p>
+        <div style={styles.headerText}>
+          <h1 style={{ margin: 0, fontSize: "24px" }}>InnovaTech Solutions</h1>
+          <p style={{ margin: "5px 0 0 0", fontSize: "14px", opacity: 0.9 }}>Plataforma de Gestión de Proyectos y Recursos</p>
+        </div>
+
+        {/* Contenedor del menú del usuario */}
+        <div style={styles.usuarioContenedor}>
+          <div style={styles.avatar} onClick={() => setMenuAbierto(!menuAbierto)}>
+            👤 <span style={{ marginLeft: 5, fontSize: "14px" }}>Mi Cuenta ▼</span>
+          </div>
+
+          {/* Menú desplegable flotante (Dropdown) */}
+          {menuAbierto && (
+            <div style={styles.dropdown}>
+              <div style={styles.dropdownItem} onClick={() => { setVista("perfil"); setMenuAbierto(false); }}>
+                ⚙️ Configurar Perfil
+              </div>
+              <div style={{ ...styles.dropdownItem, color: "#c62828" }} onClick={() => alert("Cerrando sesión...")}>
+                🚪 Cerrar Sesión
+              </div>
+            </div>
+          )}
+        </div>
       </header>
 
-      {/* MENÚ DE NAVEGACIÓN MODIFICADO */}
+      {/* MENÚ DE NAVEGACIÓN PRINCIPAL (Ahora solo Proyectos y Recursos) */}
       <nav style={styles.nav}>
         <button style={vista === "proyectos" ? styles.btnActivo : styles.btn}
           onClick={() => setVista("proyectos")}>
@@ -61,11 +88,6 @@ function App() {
         <button style={vista === "recursos" ? styles.btnActivo : styles.btn}
           onClick={() => setVista("recursos")}>
           👥 Recursos
-        </button>
-        {/* NUEVO: Botón para acceder a la vista del Perfil */}
-        <button style={vista === "perfil" ? styles.btnActivo : styles.btn}
-          onClick={() => setVista("perfil")}>
-          👤 Mi Perfil
         </button>
       </nav>
 
@@ -157,7 +179,7 @@ function App() {
           </div>
         )}
 
-        {/* NUEVO - VISTA 3: PERFIL DE USUARIO */}
+        {/* VISTA 3: PERFIL DE USUARIO */}
         {vista === "perfil" && (
           <div>
             <Perfil />
@@ -169,9 +191,51 @@ function App() {
   );
 }
 
+// ESTILOS ACTUALIZADOS PARA EL MENU DESPLEGABLE EN EL HEADER
 const styles = {
   app: { fontFamily: "Arial, sans-serif", maxWidth: 900, margin: "0 auto", padding: 20 },
-  header: { background: "#1a237e", color: "white", padding: 20, borderRadius: 8, marginBottom: 20, textAlign: "center" },
+  header: { 
+    background: "#1a237e", 
+    color: "white", 
+    padding: "15px 20px", 
+    borderRadius: 8, 
+    marginBottom: 20, 
+    display: "flex", 
+    justifyContent: "between", 
+    alignItems: "center",
+    position: "relative" // Necesario para posicionar el menú flotante
+  },
+  headerText: { flexGrow: 1, textAlign: "left" },
+  usuarioContenedor: { position: "relative" },
+  avatar: { 
+    background: "#0288d1", 
+    padding: "8px 15px", 
+    borderRadius: 20, 
+    cursor: "pointer", 
+    fontWeight: "bold",
+    userSelect: "none"
+  },
+  dropdown: {
+    position: "absolute",
+    right: 0,
+    top: "40px",
+    background: "white",
+    color: "black",
+    borderRadius: 6,
+    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+    width: "160px",
+    zIndex: 100,
+    border: "1px solid #ddd",
+    overflow: "hidden"
+  },
+  dropdownItem: {
+    padding: "10px 15px",
+    cursor: "pointer",
+    textAlign: "left",
+    fontSize: "14px",
+    transition: "background 0.2s",
+    borderBottom: "1px solid #eee"
+  },
   nav: { display: "flex", gap: 10, marginBottom: 20 },
   btn: { padding: "10px 20px", cursor: "pointer", borderRadius: 6, border: "2px solid #1a237e", background: "white" },
   btnActivo: { padding: "10px 20px", cursor: "pointer", borderRadius: 6, border: "none", background: "#1a237e", color: "white" },
